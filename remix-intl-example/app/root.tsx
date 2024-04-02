@@ -1,9 +1,20 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, redirect } from '@remix-run/react';
-
+import './i18n';
 import { parseLocale } from 'remix-intl/server';
 import { IntlScript } from 'remix-intl';
-import { LoaderFunctionArgs } from '@remix-run/node';
 import { i18nCookie } from './i18n.server';
+
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  json,
+  redirect,
+  useLoaderData,
+} from '@remix-run/react';
+
+import { LoaderFunctionArgs } from '@remix-run/node';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const res = await parseLocale(request, i18nCookie);
@@ -18,8 +29,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { locale, dir } = useLoaderData<typeof loader>();
   return (
-    <html lang="en">
+    <html lang={locale} dir={dir}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

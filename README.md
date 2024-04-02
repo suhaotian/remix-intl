@@ -61,8 +61,11 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 ```
 
+## Table of Contents
+
 - [remix-intl](#remix-intl)
   - [What does it look like?](#what-does-it-look-like)
+  - [Table of Contents](#table-of-contents)
   - [Installing](#installing)
   - [Configuration](#configuration)
     - [Create files](#create-files)
@@ -157,7 +160,7 @@ export default i18next;
 **app/i18n.server.ts**
 
 ```ts
-//app/i18n.server.ts
+// app/i18n.server.ts
 import { createCookie } from '@remix-run/node';
 import { intlConfig } from './i18n';
 
@@ -197,8 +200,11 @@ import { createReadableStreamFromReadable } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
+
+/* --- 1.IMPORT THIS --- */
 import { initIntl } from 'remix-intl/server';
 import { i18nCookie } from './i18n.server';
+/* --- 1.IMPORT THIS END --- */
 
 const ABORT_DELAY = 5_000;
 
@@ -207,12 +213,12 @@ export default async function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  // This is ignored so we can keep it in the template for visibility.  Feel
-  // free to delete this parameter in your app if you're not using it!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  /* --- 2.ADD THIS --- */
   await initIntl(request, i18nCookie);
+  /* --- 2.ADD THIS END --- */
+
   return isbot(request.headers.get('user-agent') || '')
     ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
     : handleBrowserRequest(request, responseStatusCode, responseHeaders, remixContext);
@@ -320,15 +326,20 @@ function handleBrowserRequest(
 import { RemixBrowser } from '@remix-run/react';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
+
+/* --- 1.IMPORT THIS --- */
 import { ClientProvider as IntlProvider } from 'remix-intl';
+/* --- 1.IMPORT THIS END --- */
 
 startTransition(() => {
   hydrateRoot(
     document,
     <StrictMode>
+      {/* --- 2.ADD THIS --- */}
       <IntlProvider>
         <RemixBrowser />
       </IntlProvider>
+      {/* --- 2.ADD THIS END--- */}
     </StrictMode>
   );
 });
@@ -340,14 +351,28 @@ startTransition(() => {
 
 ```tsx
 // app/root.tsx
+
+/* --- 1.IMPORT THIS --- */
 import './i18n';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, redirect } from '@remix-run/react';
-import { LoaderFunctionArgs } from '@remix-run/node';
 import { parseLocale } from 'remix-intl/server';
 import { IntlScript } from 'remix-intl';
 import { i18nCookie } from './i18n.server';
+/* --- 1.IMPORT THIS END --- */
+
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+  json,
+  redirect,
+} from '@remix-run/react';
+import { LoaderFunctionArgs } from '@remix-run/node';
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  /* --- 2.ADD THIS --- */
   const res = await parseLocale(request, i18nCookie);
   if (res.isRedirect) {
     return redirect(res.redirectURL);
@@ -357,11 +382,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       'Set-Cookie': await i18nCookie.serialize(res.locale),
     },
   });
+  /* --- 2.ADD THIS END --- */
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  /* --- 3.ADD THIS --- */
+  const { locale, dir } = useLoaderData<typeof loader>();
   return (
-    <html lang="en">
+    <html lang={locale} dir={dir}>
+      {/* --- 3.ADD THIS END --- */}
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -372,7 +401,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        {/* --- 4.ADD THIS --- */}
         <IntlScript />
+        {/* --- 4.ADD THIS END --- */}
       </body>
     </html>
   );
