@@ -8,21 +8,7 @@ The best internationalization(i18n) library for your Remix apps.
 
 - 🥳 Powerful and fully under your control
 - 🚀 Minimal size, less dependencies
-- [ ] E2E tests
-
-- [remix-intl](#remix-intl)
-  - [What does it look like?](#what-does-it-look-like)
-  - [Installing](#installing)
-  - [Configuration](#configuration)
-    - [Create **public/locales/en/index.json**](#create-publiclocalesenindexjson)
-    - [Create **app/i18n.ts**](#create-appi18nts)
-    - [Create **app/i18n.server.ts**](#create-appi18nserverts)
-    - [Update **vite.config.ts**:](#update-viteconfigts)
-    - [Update **app/entry.server.tsx**](#update-appentryservertsx)
-    - [Update **app/entry.client.tsx**](#update-appentryclienttsx)
-    - [Update **app/root.tsx**](#update-approottsx)
-    - [Create **app/navigation.tsx**](#create-appnavigationtsx)
-    - [Website and example 👉 https://remix-intl.tsdk.dev](#website-and-example--httpsremix-intltsdkdev)
+- [ ] Unit tests and E2E tests
 
 ## What does it look like?
 
@@ -76,6 +62,23 @@ export async function action({ request }: ActionFunctionArgs) {
   "create_todo": "Create Todo"
 }
 ```
+
+- [remix-intl](#remix-intl)
+  - [What does it look like?](#what-does-it-look-like)
+  - [Installing](#installing)
+  - [Configuration](#configuration)
+    - [Create **public/locales/en/index.json**](#create-publiclocalesenindexjson)
+    - [Create **public/locales/zh-CN/index.json**](#create-publiclocaleszh-cnindexjson)
+    - [Create **app/i18n.ts**](#create-appi18nts)
+    - [Create **app/i18n.server.ts**](#create-appi18nserverts)
+    - [Update **app/entry.server.tsx**](#update-appentryservertsx)
+    - [Update **app/entry.client.tsx**](#update-appentryclienttsx)
+    - [Update **app/root.tsx**](#update-approottsx)
+    - [Create **app/navigation.tsx**](#create-appnavigationtsx)
+  - [Website and example](#website-and-example)
+  - [API](#api)
+    - [remix-intl API](#remix-intl-api)
+    - [i18next API](#i18next-api)
 
 ## Installing
 
@@ -367,9 +370,11 @@ const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNa
 export { Link, NavLink, useNavigate, SwitchLocaleLink };
 ```
 
-### Website and example 👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
+## Website and example
 
-### API
+👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
+
+## API
 
 #### remix-intl API
 
