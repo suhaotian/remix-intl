@@ -1,3 +1,5 @@
+<a href="https://pkg-size.dev/remix-intl"><img src="https://pkg-size.dev/badge/install/84979" title="Install size for remix-intl"></a> <a href="https://pkg-size.dev/remix-intl"><img src="https://pkg-size.dev/badge/bundle/1634" title="Bundle size for remix-intl"></a>
+
 # remix-intl
 
 The best internationalization(i18n) library for your Remix apps.
@@ -79,11 +81,11 @@ export async function action({ request }: ActionFunctionArgs) {
     - [Create i18n messages](#create-i18n-messages)
       - [**public/locales/en/index.json**](#publiclocalesenindexjson)
       - [**public/locales/zh-CN/index.json**](#publiclocaleszh-cnindexjson)
-    - [Usage](#usage)
-      - [Different mode: `segment` and `search`](#different-mode-segment-and-search)
-      - [`paramKey`](#paramkey)
-      - [Switch language](#switch-language)
-      - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
+  - [Usage](#usage)
+    - [Different mode: `segment` and `search`](#different-mode-segment-and-search)
+    - [`paramKey`](#paramkey)
+    - [Switch different languages](#switch-different-languages)
+    - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
   - [API](#api)
     - [remix-intl API](#remix-intl-api)
     - [i18next API](#i18next-api)
@@ -432,9 +434,9 @@ export default function App() {
 }
 ```
 
-### Usage
+## Usage
 
-#### Different mode: `segment` and `search`
+### Different mode: `segment` and `search`
 
 **segment mode:** `https://example.com/locale/path`
 
@@ -442,11 +444,11 @@ export default function App() {
 
 Default is `search` mode, you can update `mode` in `app/i18n.ts` config file.
 
-#### `paramKey`
+### `paramKey`
 
 Default is `lang`, you can change to others.
 
-#### Switch language
+### Switch different languages
 
 No need refresh page example:
 
@@ -510,7 +512,7 @@ export default function LanguageSwitcher() {
 }
 ```
 
-#### `Link`, `NavLink` and `useNavigate`
+### `Link`, `NavLink` and `useNavigate`
 
 ```tsx
 import { Link, NavLink, useNavigate } from '~/navigation';
