@@ -1,7 +1,5 @@
 # remix-intl
 
-**Don't use this lib yet, Still WIP!!!**
-
 The best internationalization(i18n) library for your Remix apps.
 
 **Features:**
@@ -67,17 +65,27 @@ export async function action({ request }: ActionFunctionArgs) {
   - [What does it look like?](#what-does-it-look-like)
   - [Installing](#installing)
   - [Configuration](#configuration)
-    - [Create config file **app/i18n.ts**](#create-config-file-appi18nts)
-    - [Create i18n cookie file **app/i18n.server.ts**](#create-i18n-cookie-file-appi18nserverts)
-    - [Create i18n Link components **app/navigation.tsx**](#create-i18n-link-components-appnavigationtsx)
-    - [Update server entry **app/entry.server.tsx**](#update-server-entry-appentryservertsx)
-    - [Update client entry **app/entry.client.tsx**](#update-client-entry-appentryclienttsx)
-    - [Update **app/root.tsx**](#update-approottsx)
+    - [Create files](#create-files)
+      - [Create i18n config file](#create-i18n-config-file)
+      - [Create i18n cookie file](#create-i18n-cookie-file)
+      - [Create i18n navigation components](#create-i18n-navigation-components)
+    - [Update](#update)
+      - [Update server entry](#update-server-entry)
+      - [Update client entry](#update-client-entry)
+      - [Update root](#update-root)
     - [Create i18n messages](#create-i18n-messages)
-  - [Website and example](#website-and-example)
+      - [**public/locales/en/index.json**](#publiclocalesenindexjson)
+      - [**public/locales/zh-CN/index.json**](#publiclocaleszh-cnindexjson)
+    - [Usage](#usage)
+      - [Different mode: `segment` and `search`](#different-mode-segment-and-search)
+      - [`paramKey`](#paramkey)
+      - [Switch language](#switch-language)
+      - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
   - [API](#api)
     - [remix-intl API](#remix-intl-api)
     - [i18next API](#i18next-api)
+  - [Website and example](#website-and-example)
+  - [Support](#support)
 
 ## Installing
 
@@ -94,7 +102,11 @@ yarn add remix-intl i18next
 
 ## Configuration
 
-### Create config file **app/i18n.ts**
+### Create files
+
+#### Create i18n config file
+
+**app/i18n.ts**
 
 ```ts
 // app/i18n.ts
@@ -110,6 +122,19 @@ i18next.init({
   resources: {},
 });
 
+async function getLocales(): Promise<GetLocalesRes> {
+  // you can fetch dynamic locales from others API
+  return { locales: ['zh-CN', 'en'] };
+}
+
+async function getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
+  // you can fetch dynamic messages from others API
+  const messages = await fetch(
+    `http://localhost:5173/locales/${locale}/${ns || 'index'}.json`
+  ).then((res) => res.json());
+  return { messages, locale, ns };
+}
+
 const intlConfig: IntlConfig = {
   mode: 'search',
   paramKey: 'lang',
@@ -117,15 +142,8 @@ const intlConfig: IntlConfig = {
   defaultNS,
   clientKey: 'remix_intl',
   defaultLocale: '',
-  async getLocales(): Promise<GetLocalesRes> {
-    return { locales: ['zh-CN', 'en'] };
-  },
-  async getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
-    const messages = await fetch(
-      `http://localhost:5173/locales/${locale}/${ns || 'index'}.json`
-    ).then((res) => res.json());
-    return { messages, locale, ns };
-  },
+  getLocales,
+  getMessages,
   i18next,
 };
 
@@ -134,7 +152,9 @@ setIntlConfig(intlConfig);
 export default i18next;
 ```
 
-### Create i18n cookie file **app/i18n.server.ts**
+#### Create i18n cookie file
+
+**app/i18n.server.ts**
 
 ```ts
 //app/i18n.server.ts
@@ -149,7 +169,9 @@ export const i18nCookie = createCookie(intlConfig.cookieKey, {
 });
 ```
 
-### Create i18n Link components **app/navigation.tsx**
+#### Create i18n navigation components
+
+**app/navigation.tsx**
 
 ```tsx
 // app/navigation.tsx
@@ -160,7 +182,11 @@ const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNa
 export { Link, NavLink, useNavigate, SwitchLocaleLink };
 ```
 
-### Update server entry **app/entry.server.tsx**
+### Update
+
+#### Update server entry
+
+**app/entry.server.tsx**
 
 ```tsx
 // app/entry.server.tsx
@@ -285,7 +311,9 @@ function handleBrowserRequest(
 }
 ```
 
-### Update client entry **app/entry.client.tsx**
+#### Update client entry
+
+**app/entry.client.tsx**
 
 ```tsx
 // app/entry.client.tsx
@@ -306,7 +334,9 @@ startTransition(() => {
 });
 ```
 
-### Update **app/root.tsx**
+#### Update root
+
+**app/root.tsx**
 
 ```tsx
 // app/root.tsx
@@ -355,7 +385,7 @@ export default function App() {
 
 ### Create i18n messages
 
-**public/locales/en/index.json**
+#### **public/locales/en/index.json**
 
 ```json
 {
@@ -363,7 +393,7 @@ export default function App() {
 }
 ```
 
-**public/locales/zh-CN/index.json**
+#### **public/locales/zh-CN/index.json**
 
 ```json
 {
@@ -371,9 +401,108 @@ export default function App() {
 }
 ```
 
-## Website and example
+### Usage
 
-👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
+#### Different mode: `segment` and `search`
+
+**segment mode:** `https://example.com/locale/path`
+
+**search mode:** `https://example.com/path?lang=locale`
+
+Default is `search` mode, you can update `mode` in `app/i18n.ts` config file.
+
+#### `paramKey`
+
+Default is `lang`, you can change to others.
+
+#### Switch language
+
+No need refresh page example:
+
+```tsx
+import { SwitchLocaleLink } from '~/navigation';
+
+const langs = [
+  {
+    text: 'English',
+    code: 'en',
+  },
+  {
+    text: '简体中文',
+    code: 'zh-CN',
+  },
+];
+
+export default function LanguageSwitcher() {
+  return (
+    <div>
+      {langs.map((item) => {
+        return (
+          <SwitchLocaleLink key={item.locale} locale={item.code}>
+            {item.text}
+          </SwitchLocaleLink>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+Refresh page example:
+
+```tsx
+import { SwitchLocaleLink } from '~/navigation';
+
+const langs = [
+  {
+    text: 'English',
+    code: 'en',
+  },
+  {
+    text: '简体中文',
+    code: 'zh-CN',
+  },
+];
+
+export default function LanguageSwitcher() {
+  return (
+    <div>
+      {langs.map((item) => {
+        return (
+          <SwitchLocaleLink reloadDocument key={item.locale} locale={item.code}>
+            {item.text}
+          </SwitchLocaleLink>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+#### `Link`, `NavLink` and `useNavigate`
+
+```tsx
+import { Link, NavLink, useNavigate } from '~/navigation';
+
+export default function LinkNavigate() {
+  const navigate = useNavigate();
+  return (
+    <div>
+      {/* /docs?lang=[locale] */}
+      <Link to="/docs">Documents</Link>
+      {/* /docs?lang=[locale] */}
+      <NavLink to="/docs">Documents</NavLink>
+      <button
+        onClick={() => {
+          /* /docs?lang=[locale] */
+          navigate('/docs');
+        }}>
+        Go to Documents
+      </button>
+    </div>
+  );
+}
+```
 
 ## API
 
@@ -385,6 +514,9 @@ import { useT, useLocale } from 'remix-intl';
 
 // components
 import { ClientProvider, IntlScript } from 'remix-intl';
+import {
+  Link, NavLink, SwitchLocaleLink, useNavigate
+} from from '~/navigation'
 
 // api for server
 import { getT, getLocale } from 'remix-intl/server';
@@ -404,3 +536,11 @@ getIntlConfig().i18next.getResouceBundle;
 ```
 
 More API: https://www.i18next.com/
+
+## Website and example
+
+👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
+
+## Support
+
+- Any questions, feel free create issues 🙌

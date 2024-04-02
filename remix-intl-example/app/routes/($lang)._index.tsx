@@ -3,7 +3,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { getIntlConfig } from 'remix-intl/i18n';
 import { useT } from 'remix-intl';
 import { getT } from 'remix-intl/server';
-import { Link, SwitchLocaleLink } from '~/navigation';
+import { Link, SwitchLocaleLink, useNavigate } from '~/navigation';
 
 export const loader = async () => {
   const { locales } = await getIntlConfig().getLocales();
@@ -22,6 +22,7 @@ export default function Index() {
   const { locales } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const { t } = useT();
+  const navigate = useNavigate();
 
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
@@ -44,6 +45,14 @@ export default function Index() {
         </li>
         <li>
           <Link to="/docs">docs</Link>
+        </li>
+        <li>
+          <button
+            onClick={() => {
+              navigate('/docs');
+            }}>
+            Go to Docs
+          </button>
         </li>
       </ul>
       <ul>
