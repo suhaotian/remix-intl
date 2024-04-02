@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+lib
+dist
+coverage
+*.d.ts
+*.cjs
+*.mjs
+*.esm.js
+!npm-publish-fields.mjs
+!purge-pkg-for-publish.mjs
