@@ -70,19 +70,17 @@ export async function action({ request }: ActionFunctionArgs) {
   - [Table of Contents](#table-of-contents)
   - [Installing](#installing)
   - [Configuration](#configuration)
-    - [Create files](#create-files)
+    - [1. Create files](#1-create-files)
       - [Create i18n config file](#create-i18n-config-file)
       - [Create i18n cookie file](#create-i18n-cookie-file)
-      - [Create i18n navigation components](#create-i18n-navigation-components)
-    - [Update](#update)
+      - [Create i18n navigation components file](#create-i18n-navigation-components-file)
+    - [2. Update](#2-update)
       - [Update server entry](#update-server-entry)
       - [Update client entry](#update-client-entry)
-      - [Update root](#update-root)
+      - [Update `root.tsx`](#update-roottsx)
     - [Create i18n messages](#create-i18n-messages)
-      - [**public/locales/en/index.json**](#publiclocalesenindexjson)
-      - [**public/locales/zh-CN/index.json**](#publiclocaleszh-cnindexjson)
   - [Usage](#usage)
-    - [Different mode: `segment` and `search`](#different-mode-segment-and-search)
+    - [Different mode: `segment` or `search`](#different-mode-segment-or-search)
     - [`paramKey`](#paramkey)
     - [Switch different languages](#switch-different-languages)
     - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
@@ -107,11 +105,11 @@ yarn add remix-intl i18next
 
 ## Configuration
 
-### Create files
+### 1. Create files
 
 #### Create i18n config file
 
-**app/i18n.ts**
+`app/i18n.ts`
 
 ```ts
 // app/i18n.ts
@@ -159,7 +157,7 @@ export default i18next;
 
 #### Create i18n cookie file
 
-**app/i18n.server.ts**
+`app/i18n.server.ts`
 
 ```ts
 // app/i18n.server.ts
@@ -174,9 +172,9 @@ export const i18nCookie = createCookie(intlConfig.cookieKey, {
 });
 ```
 
-#### Create i18n navigation components
+#### Create i18n navigation components file
 
-**app/navigation.tsx**
+`app/navigation.tsx`
 
 ```tsx
 // app/navigation.tsx
@@ -187,11 +185,11 @@ const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNa
 export { Link, NavLink, useNavigate, SwitchLocaleLink };
 ```
 
-### Update
+### 2. Update
 
 #### Update server entry
 
-`app/entry.server.tsx`: **2 parts** change
+`app/entry.server.tsx`: **2 changes**
 
 ```tsx
 // app/entry.server.tsx
@@ -321,7 +319,7 @@ function handleBrowserRequest(
 
 #### Update client entry
 
-`app/entry.client.tsx`: **2 parts** change
+`app/entry.client.tsx`: **2 changes**
 
 ```tsx
 // app/entry.client.tsx
@@ -347,9 +345,9 @@ startTransition(() => {
 });
 ```
 
-#### Update root
+#### Update `root.tsx`
 
-`app/root.tsx`: **4 parts** change
+`app/root.tsx`: **4 changes**
 
 ```tsx
 // app/root.tsx
@@ -418,7 +416,7 @@ export default function App() {
 
 ### Create i18n messages
 
-#### **public/locales/en/index.json**
+`public/locales/en/index.json`
 
 ```json
 {
@@ -426,7 +424,7 @@ export default function App() {
 }
 ```
 
-#### **public/locales/zh-CN/index.json**
+`public/locales/zh-CN/index.json`
 
 ```json
 {
@@ -436,7 +434,7 @@ export default function App() {
 
 ## Usage
 
-### Different mode: `segment` and `search`
+### Different mode: `segment` or `search`
 
 **segment mode:** `https://example.com/locale/path`
 
@@ -444,9 +442,11 @@ export default function App() {
 
 Default is `search` mode, you can update `mode` in `app/i18n.ts` config file.
 
+> If you segment mode, don't forget add file prefix `($lang).`
+
 ### `paramKey`
 
-Default is `lang`, you can change to others.
+Default is `lang`, you can change to others you like.
 
 ### Switch different languages
 
@@ -572,7 +572,7 @@ More API: https://www.i18next.com/
 
 ## Website and example
 
-👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
+👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev) (WIP 🙇🏻‍♂️)
 
 ## Support
 
