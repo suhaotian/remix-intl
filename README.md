@@ -442,7 +442,7 @@ export default function App() {
 
 Default is `search` mode, you can update `mode` in `app/i18n.ts` config file.
 
-> If you segment mode, don't forget add file prefix `($lang).`
+> If you choose `segment` mode, don't forget add file prefix `($lang).` to your routes files
 
 ### `paramKey`
 
