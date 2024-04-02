@@ -189,7 +189,7 @@ export { Link, NavLink, useNavigate, SwitchLocaleLink };
 
 #### Update server entry
 
-**app/entry.server.tsx**
+`app/entry.server.tsx`: **2 parts** change
 
 ```tsx
 // app/entry.server.tsx
@@ -319,7 +319,7 @@ function handleBrowserRequest(
 
 #### Update client entry
 
-**app/entry.client.tsx**
+`app/entry.client.tsx`: **2 parts** change
 
 ```tsx
 // app/entry.client.tsx
@@ -347,7 +347,7 @@ startTransition(() => {
 
 #### Update root
 
-**app/root.tsx**
+`app/root.tsx`: **4 parts** change
 
 ```tsx
 // app/root.tsx
