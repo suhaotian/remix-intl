@@ -115,7 +115,6 @@ yarn add remix-intl i18next
 import { createInstance } from 'i18next';
 import type { GetLocalesRes, GetMessagesRes, IntlConfig } from 'remix-intl/types';
 import { setIntlConfig } from 'remix-intl/i18n';
-import { http } from './http';
 
 const defaultNS = 'remix_intl';
 const i18next = createInstance({ defaultNS, ns: [defaultNS], resources: {} });
@@ -372,7 +371,7 @@ export { Link, NavLink, useNavigate, SwitchLocaleLink };
 
 ### API
 
-#### Remix API
+#### remix-intl API
 
 ```tsx
 // hooks
@@ -396,5 +395,6 @@ import { getIntlConfig } from 'remix-intl/i18n';
 getIntlConfig().i18next.addResouceBundle;
 getIntlConfig().i18next.dir;
 getIntlConfig().i18next.getResouceBundle;
-// More: https://www.i18next.com/
 ```
+
+More API: https://www.i18next.com/
