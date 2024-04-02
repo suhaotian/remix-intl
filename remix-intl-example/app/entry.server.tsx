@@ -4,6 +4,7 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
+import './i18n';
 import { PassThrough } from 'node:stream';
 
 import type { AppLoadContext, EntryContext } from '@remix-run/node';
@@ -11,7 +12,7 @@ import { createReadableStreamFromReadable } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
-import { initIntl } from 'remix-intl';
+import { initIntl } from 'remix-intl/server';
 import { i18nCookie } from './i18n.server';
 
 const ABORT_DELAY = 5_000;

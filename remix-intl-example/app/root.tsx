@@ -1,7 +1,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, redirect } from '@remix-run/react';
 
-import { parseLocale } from 'remix-intl';
-import { IntlScript } from 'remix-intl/react';
+import { parseLocale } from 'remix-intl/server';
+import { IntlScript } from 'remix-intl';
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { i18nCookie } from './i18n.server';
 

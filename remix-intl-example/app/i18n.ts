@@ -1,32 +1,34 @@
-import type { GetLocalesRes, GetMessagesRes, Mode } from 'remix-intl/types';
-import { i18n, createInstance } from 'i18next';
+import { createInstance } from 'i18next';
+import type { GetLocalesRes, GetMessagesRes, IntlConfig } from 'remix-intl/types';
+import { setIntlConfig } from 'remix-intl/i18n';
 import { http } from './http';
 
-export const mode: Mode = 'search';
-export const paramKey = 'lang';
-export const cookieKey = 'remix_intl';
-export const defaultNS = 'remix_intl';
-export const clientKey = 'remix_intl';
-export const defaultLocale = '';
-
-export async function getLocales(): Promise<GetLocalesRes> {
-  const { data } = await http.get(`/locales.json`, { threshold: 10 * 1000 });
-  return { locales: data };
-}
-
-export async function getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
-  const { data } = await http.get(`/locales/${locale}/${ns || 'index'}.json`, {
-    threshold: 10 * 1000,
-  });
-  return { messages: data, locale, ns };
-}
-
+const defaultNS = 'remix_intl';
 const i18next = createInstance({ defaultNS, ns: [defaultNS], resources: {} });
-
 i18next.init({
   defaultNS,
   ns: [defaultNS],
   resources: {},
 });
 
-export default i18next as i18n;
+export const intlConfig: IntlConfig = {
+  mode: 'search',
+  paramKey: 'lang',
+  cookieKey: 'remix_intl',
+  defaultNS,
+  clientKey: 'remix_intl',
+  defaultLocale: '',
+  async getLocales(): Promise<GetLocalesRes> {
+    const { data } = await http.get(`/locales.json`, { threshold: 10 * 1000 });
+    return { locales: data };
+  },
+  async getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
+    const { data } = await http.get(`/locales/${locale}/${ns || 'index'}.json`, {
+      threshold: 10 * 1000,
+    });
+    return { messages: data, locale, ns };
+  },
+  i18next,
+};
+
+setIntlConfig(intlConfig);

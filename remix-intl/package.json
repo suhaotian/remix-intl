@@ -1,6 +1,6 @@
 {
   "name": "remix-intl",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Internationalization(i18n) library for your Remix apps",
   "author": "suhaotian",
   "license": "MIT",
@@ -19,15 +19,9 @@
       "import": "./index.mjs",
       "module": "./index.esm.js"
     },
-    "./plugin": {
-      "types": "./plugin.d.ts",
-      "require": "./plugin.cjs",
-      "import": "./plugin.mjs",
-      "module": "./plugin.esm.js"
-    },
     "./i18n": {
       "types": "./i18n.d.ts",
-      "default": "./i18n.cjs",
+      "require": "./i18n.cjs",
       "import": "./i18n.mjs",
       "module": "./i18n.esm.js"
     },
@@ -36,12 +30,6 @@
       "require": "./navigation.cjs",
       "import": "./navigation.mjs",
       "module": "./navigation.esm.js"
-    },
-    "./react": {
-      "types": "./react.d.ts",
-      "require": "./react.cjs",
-      "import": "./react.mjs",
-      "module": "./react.esm.js"
     },
     "./server": {
       "types": "./server.d.ts",
@@ -67,7 +55,7 @@
     "dev:build": "bunchee -w --external @remix-run/react,@remix-run/node,react,i18next",
     "test": "jest --collectCoverage",
     "typecheck": "tsc",
-    "start-publish": "pnpm build && node scripts/purge-pkg-for-publish.mjs && npm publish --registry=https://registry.npmjs.org"
+    "start-publish": "cp ../README.md ./ && pnpm build && node scripts/purge-pkg-for-publish.mjs && npm publish --registry=https://registry.npmjs.org"
   },
   "devDependencies": {
     "i18next": "^23",

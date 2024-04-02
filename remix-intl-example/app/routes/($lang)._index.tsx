@@ -1,12 +1,12 @@
 import { ActionFunctionArgs, json, redirect, type MetaFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { getLocales } from 'remix-intl/i18n';
-import { useT } from 'remix-intl/react';
+import { getIntlConfig } from 'remix-intl/i18n';
+import { useT } from 'remix-intl';
 import { getT } from 'remix-intl/server';
 import { Link, SwitchLocaleLink } from '~/navigation';
 
 export const loader = async () => {
-  const { locales } = await getLocales();
+  const { locales } = await getIntlConfig().getLocales();
   return json({ locales });
 };
 

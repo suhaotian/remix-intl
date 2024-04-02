@@ -9,11 +9,13 @@ import {
 } from '@remix-run/react';
 import React from 'react';
 // @ts-ignore
-import i18n, { mode, paramKey, getMessages, defaultNS } from 'remix-intl/i18n';
+import { useLocale } from 'remix-intl';
+import { getIntlConfig } from 'remix-intl/i18n';
 // @ts-ignore
-import { useLocale } from 'remix-intl/react';
 
 export function createSharedPathnamesNavigation() {
+  const { mode, paramKey, getMessages, defaultNS, i18next } = getIntlConfig();
+
   function getPath(toPathname: string, locale: string, replaceLocale = false) {
     const isSearchParamMode = mode === 'search';
     if (!isSearchParamMode) {
@@ -47,7 +49,7 @@ export function createSharedPathnamesNavigation() {
       if (!props.reloadDocument) {
         e.preventDefault();
         const { messages } = await getMessages(locale);
-        i18n.addResourceBundle(locale, defaultNS, messages);
+        i18next.addResourceBundle(locale, defaultNS, messages);
         navigate(to, props);
       }
       onClick && onClick(e);

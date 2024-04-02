@@ -112,34 +112,39 @@ yarn add remix-intl i18next
 
 ```ts
 // app/i18n.ts
-import type { GetLocalesRes, GetMessagesRes, Mode } from 'remix-intl/types';
-import { i18n, createInstance } from 'i18next';
+import { createInstance } from 'i18next';
+import type { GetLocalesRes, GetMessagesRes, IntlConfig } from 'remix-intl/types';
+import { setIntlConfig } from 'remix-intl/i18n';
+import { http } from './http';
 
-export const mode: Mode = 'search';
-export const paramKey = 'lang';
-export const cookieKey = 'remix_intl';
-export const defaultNS = 'remix_intl';
-export const clientKey = 'remix_intl';
-export const defaultLocale = '';
-
-export async function getLocales(): Promise<GetLocalesRes> {
-  return { locales: ['zh-CN', 'en'] };
-}
-
-export async function getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
-  const messages = await fetch(
-    `http://localhost:5173/locales/${locale}/${ns || 'index'}.json`
-  ).then((res) => res.json());
-  return { messages, locale, ns };
-}
-
+const defaultNS = 'remix_intl';
 const i18next = createInstance({ defaultNS, ns: [defaultNS], resources: {} });
-
 i18next.init({
   defaultNS,
   ns: [defaultNS],
   resources: {},
 });
+
+const intlConfig: IntlConfig = {
+  mode: 'search',
+  paramKey: 'lang',
+  cookieKey: 'remix_intl',
+  defaultNS,
+  clientKey: 'remix_intl',
+  defaultLocale: '',
+  async getLocales(): Promise<GetLocalesRes> {
+    return { locales: ['zh-CN', 'en'] };
+  },
+  async getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
+    const messages = await fetch(
+      `http://localhost:5173/locales/${locale}/${ns || 'index'}.json`
+    ).then((res) => res.json());
+    return { messages, locale, ns };
+  },
+  i18next,
+};
+
+setIntlConfig(intlConfig);
 
 export default i18next;
 ```
@@ -149,9 +154,9 @@ export default i18next;
 ```ts
 //app/i18n.server.ts
 import { createCookie } from '@remix-run/node';
-import { cookieKey } from 'remix-intl/i18n';
+import { intlConfig } from './i18n';
 
-export const i18nCookie = createCookie(cookieKey, {
+export const i18nCookie = createCookie(intlConfig.cookieKey, {
   path: '/',
   sameSite: 'lax',
   httpOnly: true,
@@ -159,32 +164,10 @@ export const i18nCookie = createCookie(cookieKey, {
 });
 ```
 
-### Update **vite.config.ts**:
-
-```ts
-// vite.config.ts
-import { vitePlugin as remix } from '@remix-run/dev';
-import { installGlobals } from '@remix-run/node';
-import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
-
-import path from 'path';
-import init from 'remix-intl/plugin';
-
-installGlobals();
-
-export default defineConfig(
-  init(path.join(__dirname, 'app/i18n.ts'), {
-    plugins: [remix(), tsconfigPaths()],
-  })
-);
-```
-
 ### Update **app/entry.server.tsx**
 
 ```tsx
 // app/entry.server.tsx
-
 import { PassThrough } from 'node:stream';
 
 import type { AppLoadContext, EntryContext } from '@remix-run/node';
@@ -313,7 +296,7 @@ function handleBrowserRequest(
 import { RemixBrowser } from '@remix-run/react';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { ClientProvider as IntlProvider } from 'remix-intl/react';
+import { ClientProvider as IntlProvider } from 'remix-intl';
 
 startTransition(() => {
   hydrateRoot(
@@ -331,10 +314,11 @@ startTransition(() => {
 
 ```tsx
 // app/root.tsx
+import './i18n';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, redirect } from '@remix-run/react';
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { parseLocale } from 'remix-intl/server';
-import { IntlScript } from 'remix-intl/react';
+import { IntlScript } from 'remix-intl';
 import { i18nCookie } from './i18n.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -384,7 +368,7 @@ const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNa
 export { Link, NavLink, useNavigate, SwitchLocaleLink };
 ```
 
-### Website and example 👉 https://remix-intl.tsdk.dev
+### Website and example 👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
 
 ### API
 
@@ -392,10 +376,10 @@ export { Link, NavLink, useNavigate, SwitchLocaleLink };
 
 ```tsx
 // hooks
-import { useT, useLocale } from 'remix-intl/react';
+import { useT, useLocale } from 'remix-intl';
 
 // components
-import { ClientProvider, IntlScript } from 'remix-intl/react';
+import { ClientProvider, IntlScript } from 'remix-intl';
 
 // api for server
 import { getT, getLocale } from 'remix-intl/server';
@@ -407,10 +391,10 @@ import { isClient, stringSimilarity, acceptLanguageMatcher } from 'remix-intl/ut
 #### i18next API
 
 ```ts
-import i18n from 'remix-intl/i18n';
+import { getIntlConfig } from 'remix-intl/i18n';
 
-i18n.addResouceBundle;
-i18n.dir;
-i18n.getResouceBundle;
+getIntlConfig().i18next.addResouceBundle;
+getIntlConfig().i18next.dir;
+getIntlConfig().i18next.getResouceBundle;
 // More: https://www.i18next.com/
 ```

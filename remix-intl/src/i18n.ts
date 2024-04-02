@@ -1,34 +1,38 @@
-import { i18n, createInstance } from 'i18next';
+import { createInstance } from 'i18next';
 // @ts-ignore
-import type { GetLocalesRes, GetMessagesRes, Mode } from 'remix-intl/types';
+import type { GetLocalesRes, GetMessagesRes, IntlConfig } from 'remix-intl/types';
 
-// if error means resolve alias not work
-
-export const mode: Mode = 'search';
-export const paramKey = 'lang';
-export const cookieKey = 'remix_intl';
-export const defaultNS = 'remix_intl';
-export const clientKey = 'remix_intl';
-export const defaultLocale = '';
-
-export async function getLocales(): Promise<GetLocalesRes> {
-  return { locales: [] };
-}
-
-export async function getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
-  return { messages: {}, locale, ns };
-}
+const defaultNS = 'remix_intl';
 
 const i18next = createInstance({ defaultNS, ns: [defaultNS], resources: {} });
-
 i18next.init({
   defaultNS,
   ns: [defaultNS],
   resources: {},
 });
 
-export default i18next as i18n;
+const config: IntlConfig = {
+  mode: 'search',
+  paramKey: 'lang',
+  cookieKey: 'remix_intl',
+  defaultNS: 'remix_intl',
+  clientKey: 'remix_intl',
+  defaultLocale: '',
+  async getLocales(): Promise<GetLocalesRes> {
+    return { locales: [] };
+  },
+  async getMessages(locale: string, ns?: string): Promise<GetMessagesRes> {
+    return { messages: {}, locale, ns };
+  },
+  i18next,
+};
 
-console.log(new Error("shouldn't call here"));
+export function setIntlConfig(
+  _config: Partial<IntlConfig> & Pick<IntlConfig, 'getLocales' | 'getMessages' | 'i18next'>
+) {
+  Object.assign(config, _config);
+}
 
-console.log(233);
+export function getIntlConfig() {
+  return config;
+}

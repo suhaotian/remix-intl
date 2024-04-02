@@ -1,7 +1,7 @@
 import { createCookie } from '@remix-run/node';
-import { cookieKey } from 'remix-intl/i18n';
+import { intlConfig } from './i18n';
 
-export const i18nCookie = createCookie(cookieKey, {
+export const i18nCookie = createCookie(intlConfig.cookieKey, {
   path: '/',
   sameSite: 'lax',
   httpOnly: true,
