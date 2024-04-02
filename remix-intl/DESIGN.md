@@ -5,7 +5,7 @@ Best i18n lib for remix.js(^v2).
 Goal:
 
 - Less API
-- Full tested and type safe
+- Full tested
 
 **API:**
 
@@ -31,10 +31,9 @@ Goal:
 - [x] switch locale: no need refresh
 - [x] ux improve: no need reload page to change locale(solution: fetch i18n data, add resource bundle, and set locale, finally update url)
 - [ ] e2e tests: segment mode / query mode(search params mode) / Parallel testing
-- [x] README
-- [ ] docs
-- [ ] website
 - [ ] unit tests
+- [ ] website(also the example) and docs
+- [x] README
 - [ ] timezone/currency/format
 - [ ] default locale no need redirect option
 
@@ -64,6 +63,8 @@ API
 - getT
 - getLocale
 - Link / NavLink / SwitchLocaleLink / useNavigate
+- initIntl
+- IntlScript / ClientIntlProvider
 
 Advance:
 
