@@ -67,14 +67,13 @@ export async function action({ request }: ActionFunctionArgs) {
   - [What does it look like?](#what-does-it-look-like)
   - [Installing](#installing)
   - [Configuration](#configuration)
-    - [Create **public/locales/en/index.json**](#create-publiclocalesenindexjson)
-    - [Create **public/locales/zh-CN/index.json**](#create-publiclocaleszh-cnindexjson)
-    - [Create **app/i18n.ts**](#create-appi18nts)
-    - [Create **app/i18n.server.ts**](#create-appi18nserverts)
-    - [Update **app/entry.server.tsx**](#update-appentryservertsx)
-    - [Update **app/entry.client.tsx**](#update-appentryclienttsx)
+    - [Create config file **app/i18n.ts**](#create-config-file-appi18nts)
+    - [Create i18n cookie file **app/i18n.server.ts**](#create-i18n-cookie-file-appi18nserverts)
+    - [Create i18n Link components **app/navigation.tsx**](#create-i18n-link-components-appnavigationtsx)
+    - [Update server entry **app/entry.server.tsx**](#update-server-entry-appentryservertsx)
+    - [Update client entry **app/entry.client.tsx**](#update-client-entry-appentryclienttsx)
     - [Update **app/root.tsx**](#update-approottsx)
-    - [Create **app/navigation.tsx**](#create-appnavigationtsx)
+    - [Create i18n messages](#create-i18n-messages)
   - [Website and example](#website-and-example)
   - [API](#api)
     - [remix-intl API](#remix-intl-api)
@@ -95,23 +94,7 @@ yarn add remix-intl i18next
 
 ## Configuration
 
-### Create **public/locales/en/index.json**
-
-```json
-{
-  "hi": "Hello"
-}
-```
-
-### Create **public/locales/zh-CN/index.json**
-
-```json
-{
-  "hi": "您好"
-}
-```
-
-### Create **app/i18n.ts**
+### Create config file **app/i18n.ts**
 
 ```ts
 // app/i18n.ts
@@ -151,7 +134,7 @@ setIntlConfig(intlConfig);
 export default i18next;
 ```
 
-### Create **app/i18n.server.ts**
+### Create i18n cookie file **app/i18n.server.ts**
 
 ```ts
 //app/i18n.server.ts
@@ -166,7 +149,18 @@ export const i18nCookie = createCookie(intlConfig.cookieKey, {
 });
 ```
 
-### Update **app/entry.server.tsx**
+### Create i18n Link components **app/navigation.tsx**
+
+```tsx
+// app/navigation.tsx
+import { createSharedPathnamesNavigation } from 'remix-intl/navigation';
+
+const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNavigation();
+
+export { Link, NavLink, useNavigate, SwitchLocaleLink };
+```
+
+### Update server entry **app/entry.server.tsx**
 
 ```tsx
 // app/entry.server.tsx
@@ -291,7 +285,7 @@ function handleBrowserRequest(
 }
 ```
 
-### Update **app/entry.client.tsx**
+### Update client entry **app/entry.client.tsx**
 
 ```tsx
 // app/entry.client.tsx
@@ -359,15 +353,22 @@ export default function App() {
 }
 ```
 
-### Create **app/navigation.tsx**
+### Create i18n messages
 
-```tsx
-// app/navigation.tsx
-import { createSharedPathnamesNavigation } from 'remix-intl/navigation';
+**public/locales/en/index.json**
 
-const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNavigation();
+```json
+{
+  "hi": "Hello"
+}
+```
 
-export { Link, NavLink, useNavigate, SwitchLocaleLink };
+**public/locales/zh-CN/index.json**
+
+```json
+{
+  "hi": "您好"
+}
 ```
 
 ## Website and example
