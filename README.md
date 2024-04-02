@@ -8,7 +8,7 @@ The best internationalization(i18n) library for your Remix apps.
 
 - 🥳 Powerful and fully under your control
 - 🚀 Minimal size, less dependencies
-- ✅ E2E tests
+- [ ] E2E tests
 
 - [remix-intl](#remix-intl)
   - [What does it look like?](#what-does-it-look-like)

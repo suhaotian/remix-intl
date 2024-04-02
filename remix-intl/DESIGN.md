@@ -49,7 +49,7 @@ pnpm i remix-intl i18next
 
 ### Setup
 
-- ./vite.config.ts initPlugin
+- ~~./vite.config.ts initPlugin~~
 - ./app/entry.server.tsx initIntl
 - ./app/entry.client.tsx ClientProvider
 - ./app/i18n.tsx create config i18n.ts
@@ -68,4 +68,4 @@ API
 Advance:
 
 - Dynamic load bundle
-- Use i18n-ally plugin in vscode get hint
+- Use i18n-ally vscode plugin get better DX
