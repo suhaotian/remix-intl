@@ -3,6 +3,8 @@ import type { TOptions, i18n } from 'i18next';
 import React from 'react';
 // @ts-ignore
 import { getIntlConfig } from 'remix-intl/i18n';
+// @ts-ignore
+import { isClient } from 'remix-intl/utils';
 
 export function useLocale() {
   const { mode, paramKey, defaultLocale } = getIntlConfig();
@@ -51,7 +53,6 @@ export function IntlScript() {
 
   const locale = useLocale();
   const i18nData = locale ? { messages: i18next.getResourceBundle(locale, defaultNS), locale } : {};
-  const isClient = typeof document !== 'undefined';
 
   return (
     <script

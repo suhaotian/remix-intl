@@ -4,6 +4,8 @@
 
 The best internationalization(i18n) library for your Remix apps.
 
+> Require at least Remix@2.8
+
 **Features:**
 
 - 🥳 Powerful and fully under your control
