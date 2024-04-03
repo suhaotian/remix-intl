@@ -1,3 +1,5 @@
+<a href="https://pkg-size.dev/remix-intl"><img src="https://pkg-size.dev/badge/install/84979" title="Install size for remix-intl"></a> <a href="https://pkg-size.dev/remix-intl"><img src="https://pkg-size.dev/badge/bundle/1634" title="Bundle size for remix-intl"></a>
+
 # remix-intl
 
 The best internationalization(i18n) library for your Remix apps.
@@ -61,26 +63,27 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 ```
 
+## Table of Contents
+
 - [remix-intl](#remix-intl)
   - [What does it look like?](#what-does-it-look-like)
+  - [Table of Contents](#table-of-contents)
   - [Installing](#installing)
   - [Configuration](#configuration)
-    - [Create files](#create-files)
+    - [1. Create files](#1-create-files)
       - [Create i18n config file](#create-i18n-config-file)
       - [Create i18n cookie file](#create-i18n-cookie-file)
-      - [Create i18n navigation components](#create-i18n-navigation-components)
-    - [Update](#update)
+      - [Create i18n navigation components file](#create-i18n-navigation-components-file)
+    - [2. Update](#2-update)
       - [Update server entry](#update-server-entry)
       - [Update client entry](#update-client-entry)
-      - [Update root](#update-root)
+      - [Update `root.tsx`](#update-roottsx)
     - [Create i18n messages](#create-i18n-messages)
-      - [**public/locales/en/index.json**](#publiclocalesenindexjson)
-      - [**public/locales/zh-CN/index.json**](#publiclocaleszh-cnindexjson)
-    - [Usage](#usage)
-      - [Different mode: `segment` and `search`](#different-mode-segment-and-search)
-      - [`paramKey`](#paramkey)
-      - [Switch language](#switch-language)
-      - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
+  - [Usage](#usage)
+    - [Different mode: `segment` or `search`](#different-mode-segment-or-search)
+    - [`paramKey`](#paramkey)
+    - [Switch different languages](#switch-different-languages)
+    - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
   - [API](#api)
     - [remix-intl API](#remix-intl-api)
     - [i18next API](#i18next-api)
@@ -102,11 +105,11 @@ yarn add remix-intl i18next
 
 ## Configuration
 
-### Create files
+### 1. Create files
 
 #### Create i18n config file
 
-**app/i18n.ts**
+`app/i18n.ts`
 
 ```ts
 // app/i18n.ts
@@ -135,7 +138,7 @@ async function getMessages(locale: string, ns?: string): Promise<GetMessagesRes>
   return { messages, locale, ns };
 }
 
-const intlConfig: IntlConfig = {
+export const intlConfig: IntlConfig = {
   mode: 'search',
   paramKey: 'lang',
   cookieKey: 'remix_intl',
@@ -154,10 +157,10 @@ export default i18next;
 
 #### Create i18n cookie file
 
-**app/i18n.server.ts**
+`app/i18n.server.ts`
 
 ```ts
-//app/i18n.server.ts
+// app/i18n.server.ts
 import { createCookie } from '@remix-run/node';
 import { intlConfig } from './i18n';
 
@@ -169,9 +172,9 @@ export const i18nCookie = createCookie(intlConfig.cookieKey, {
 });
 ```
 
-#### Create i18n navigation components
+#### Create i18n navigation components file
 
-**app/navigation.tsx**
+`app/navigation.tsx`
 
 ```tsx
 // app/navigation.tsx
@@ -182,11 +185,11 @@ const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNa
 export { Link, NavLink, useNavigate, SwitchLocaleLink };
 ```
 
-### Update
+### 2. Update
 
 #### Update server entry
 
-**app/entry.server.tsx**
+`app/entry.server.tsx`: **3 changes**
 
 ```tsx
 // app/entry.server.tsx
@@ -197,22 +200,27 @@ import { createReadableStreamFromReadable } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
+
+/* --- 1.IMPORT THIS --- */
 import { initIntl } from 'remix-intl/server';
 import { i18nCookie } from './i18n.server';
+/* --- 1.IMPORT THIS END --- */
 
 const ABORT_DELAY = 5_000;
 
+/* --- 2.ADD `async` --- */
 export default async function handleRequest(
+  /* --- 2.ADD `async` end --- */
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  // This is ignored so we can keep it in the template for visibility.  Feel
-  // free to delete this parameter in your app if you're not using it!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  /* --- 3.ADD THIS --- */
   await initIntl(request, i18nCookie);
+  /* --- 3.ADD THIS END --- */
+
   return isbot(request.headers.get('user-agent') || '')
     ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
     : handleBrowserRequest(request, responseStatusCode, responseHeaders, remixContext);
@@ -250,9 +258,6 @@ function handleBotRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
           if (shellRendered) {
             console.error(error);
           }
@@ -296,9 +301,6 @@ function handleBrowserRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
           if (shellRendered) {
             console.error(error);
           }
@@ -313,41 +315,60 @@ function handleBrowserRequest(
 
 #### Update client entry
 
-**app/entry.client.tsx**
+`app/entry.client.tsx`: **2 changes**
 
 ```tsx
 // app/entry.client.tsx
 import { RemixBrowser } from '@remix-run/react';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
+
+/* --- 1.IMPORT THIS --- */
 import { ClientProvider as IntlProvider } from 'remix-intl';
+/* --- 1.IMPORT THIS END --- */
 
 startTransition(() => {
   hydrateRoot(
     document,
     <StrictMode>
+      {/* --- 2.ADD THIS --- */}
       <IntlProvider>
         <RemixBrowser />
       </IntlProvider>
+      {/* --- 2.ADD THIS END--- */}
     </StrictMode>
   );
 });
 ```
 
-#### Update root
+#### Update `root.tsx`
 
-**app/root.tsx**
+`app/root.tsx`: **4 changes**
 
 ```tsx
 // app/root.tsx
+
+/* --- 1.IMPORT THIS --- */
 import './i18n';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, redirect } from '@remix-run/react';
-import { LoaderFunctionArgs } from '@remix-run/node';
 import { parseLocale } from 'remix-intl/server';
 import { IntlScript } from 'remix-intl';
 import { i18nCookie } from './i18n.server';
+/* --- 1.IMPORT THIS END --- */
+
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+  json,
+  redirect,
+} from '@remix-run/react';
+import { LoaderFunctionArgs } from '@remix-run/node';
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  /* --- 2.ADD THIS --- */
   const res = await parseLocale(request, i18nCookie);
   if (res.isRedirect) {
     return redirect(res.redirectURL);
@@ -357,11 +378,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       'Set-Cookie': await i18nCookie.serialize(res.locale),
     },
   });
+  /* --- 2.ADD THIS END --- */
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  /* --- 3.ADD THIS --- */
+  const { locale, dir } = useLoaderData<typeof loader>();
   return (
-    <html lang="en">
+    <html lang={locale} dir={dir}>
+      {/* --- 3.ADD THIS END --- */}
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -372,7 +397,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        {/* --- 4.ADD THIS --- */}
         <IntlScript />
+        {/* --- 4.ADD THIS END --- */}
       </body>
     </html>
   );
@@ -385,7 +412,7 @@ export default function App() {
 
 ### Create i18n messages
 
-#### **public/locales/en/index.json**
+`public/locales/en/index.json`
 
 ```json
 {
@@ -393,7 +420,7 @@ export default function App() {
 }
 ```
 
-#### **public/locales/zh-CN/index.json**
+`public/locales/zh-CN/index.json`
 
 ```json
 {
@@ -401,9 +428,9 @@ export default function App() {
 }
 ```
 
-### Usage
+## Usage
 
-#### Different mode: `segment` and `search`
+### Different mode: `segment` or `search`
 
 **segment mode:** `https://example.com/locale/path`
 
@@ -411,11 +438,13 @@ export default function App() {
 
 Default is `search` mode, you can update `mode` in `app/i18n.ts` config file.
 
-#### `paramKey`
+> If you choose `segment` mode, don't forget add file prefix `($lang).` to your routes files
 
-Default is `lang`, you can change to others.
+### `paramKey`
 
-#### Switch language
+Default is `lang`, you can change to others you like.
+
+### Switch different languages
 
 No need refresh page example:
 
@@ -479,7 +508,7 @@ export default function LanguageSwitcher() {
 }
 ```
 
-#### `Link`, `NavLink` and `useNavigate`
+### `Link`, `NavLink` and `useNavigate`
 
 ```tsx
 import { Link, NavLink, useNavigate } from '~/navigation';
@@ -535,11 +564,11 @@ getIntlConfig().i18next.dir;
 getIntlConfig().i18next.getResouceBundle;
 ```
 
-More API: https://www.i18next.com/
+More `i18next` API: https://www.i18next.com/
 
 ## Website and example
 
-👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev)
+👉 [https://remix-intl.tsdk.dev](https://remix-intl.tsdk.dev) (WIP 🙇🏻‍♂️)
 
 ## Support
 

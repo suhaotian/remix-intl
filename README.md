@@ -138,7 +138,7 @@ async function getMessages(locale: string, ns?: string): Promise<GetMessagesRes>
   return { messages, locale, ns };
 }
 
-const intlConfig: IntlConfig = {
+export const intlConfig: IntlConfig = {
   mode: 'search',
   paramKey: 'lang',
   cookieKey: 'remix_intl',
@@ -189,7 +189,7 @@ export { Link, NavLink, useNavigate, SwitchLocaleLink };
 
 #### Update server entry
 
-`app/entry.server.tsx`: **2 changes**
+`app/entry.server.tsx`: **3 changes**
 
 ```tsx
 // app/entry.server.tsx
@@ -208,16 +208,18 @@ import { i18nCookie } from './i18n.server';
 
 const ABORT_DELAY = 5_000;
 
+/* --- 2.ADD `async` --- */
 export default async function handleRequest(
+  /* --- 2.ADD `async` end --- */
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
   loadContext: AppLoadContext
 ) {
-  /* --- 2.ADD THIS --- */
+  /* --- 3.ADD THIS --- */
   await initIntl(request, i18nCookie);
-  /* --- 2.ADD THIS END --- */
+  /* --- 3.ADD THIS END --- */
 
   return isbot(request.headers.get('user-agent') || '')
     ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
@@ -256,9 +258,6 @@ function handleBotRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
           if (shellRendered) {
             console.error(error);
           }
@@ -302,9 +301,6 @@ function handleBrowserRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
           if (shellRendered) {
             console.error(error);
           }
@@ -568,7 +564,7 @@ getIntlConfig().i18next.dir;
 getIntlConfig().i18next.getResouceBundle;
 ```
 
-More API: https://www.i18next.com/
+More `i18next` API: https://www.i18next.com/
 
 ## Website and example
 
