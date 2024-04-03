@@ -1,4 +1,15 @@
 {
+  "i18n-ally.localesPaths": ["**/locales/"],
+  "i18n-ally.enabledFrameworks": ["i18next", "custom"],
+  "i18n-ally.namespace": false,
+  "i18n-ally.pathMatcher": "{locale}/{namespaces}.json",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.regex.usageMatchAppend": [
+    "/\\*\\s*i18n\\s*\\*/\\s*['\"`]({key})['\"`]",
+    "\\Wt\\(\\s*['\"`]({key})['\"`]",
+    "\\W$t\\(\\s*['\"`]({key})['\"`]",
+    "\\WtranslateWithLang\\(.*\\)\\(\\s*['\"`]({key})['\"`]"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   }
