@@ -166,12 +166,7 @@ export default i18next;
 import { createCookie } from '@remix-run/node';
 import { intlConfig } from './i18n';
 
-export const i18nCookie = createCookie(intlConfig.cookieKey, {
-  path: '/',
-  sameSite: 'lax',
-  httpOnly: true,
-  secrets: [],
-});
+export const i18nCookie = createCookie(intlConfig.cookieKey);
 ```
 
 #### Create i18n navigation components file

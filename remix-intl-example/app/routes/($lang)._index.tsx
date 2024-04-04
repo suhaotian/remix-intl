@@ -1,11 +1,17 @@
-import { ActionFunctionArgs, json, redirect, type MetaFunction } from '@remix-run/node';
+import {
+  ActionFunctionArgs,
+  json,
+  redirect,
+  type MetaFunction,
+  LoaderFunctionArgs,
+} from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { getIntlConfig } from 'remix-intl/i18n';
 import { useT } from 'remix-intl';
 import { getT } from 'remix-intl/server';
 import { Link, SwitchLocaleLink, useNavigate } from '~/navigation';
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { locales } = await getIntlConfig().getLocales();
   return json({ locales });
 };
@@ -74,7 +80,8 @@ export default function Index() {
   );
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
+  console.log('action context', context);
   const body = await request.formData();
   const { t } = getT(request.url);
   if (!body.get('title')) {
