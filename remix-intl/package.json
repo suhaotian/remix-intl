@@ -62,7 +62,7 @@
     "react": "^18",
     "react-dom": "^18",
     "xior": "^0.3.5",
-    "bunchee": "^5.0.1",
+    "bunchee": "^5.1.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

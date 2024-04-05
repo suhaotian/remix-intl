@@ -98,8 +98,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@babel/core@7.24.3)
       bunchee:
-        specifier: ^5.0.1
-        version: 5.0.1(typescript@5.4.3)
+        specifier: ^5.1.2
+        version: 5.1.2(typescript@5.4.3)
       eslint:
         specifier: ^8
         version: 8.57.0
@@ -3482,8 +3482,8 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /bunchee@5.0.1(typescript@5.4.3):
-    resolution: {integrity: sha512-awtn36CmPdrAHtT13U9cn/g/pqW8fw1/UVsUJh0XjX1w8UJtLUJYuBe8PqVKoguNu0HUTQn6p0eZaXVjotBIhw==}
+  /bunchee@5.1.2(typescript@5.4.3):
+    resolution: {integrity: sha512-fOcub+z6CcCesKjVX82+B6wPTzQjtcHjrI1zcAc/acc5PRmI4fNsww7p20VxR8lctaXPrLnbuWeuhtSrZ311/Q==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
