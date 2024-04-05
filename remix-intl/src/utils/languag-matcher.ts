@@ -3,9 +3,9 @@ export function acceptLanguageMatcher(
   locales: string[],
   defaultLocaleWhenNotMatch: string
 ) {
+  let result = defaultLocaleWhenNotMatch;
   const supportLocales = transformAcceptLanguageToSortedArray(acceptLanguage);
   if (supportLocales.length > 0) {
-    const locale = '';
     supportLocales.find((locale) => {
       const l = locale.toLowerCase();
       const findLocale = locales.find((item) => {
@@ -13,13 +13,12 @@ export function acceptLanguageMatcher(
         return i === l;
       });
       if (findLocale) {
-        locale = findLocale;
+        result = findLocale;
       }
       return findLocale;
     });
-    if (locale) return locale;
   }
-  return defaultLocaleWhenNotMatch;
+  return result;
 }
 
 export function transformAcceptLanguageToSortedArray(acceptLanguage: string): string[] {
