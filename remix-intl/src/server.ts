@@ -146,6 +146,7 @@ export async function parseLocale(
         ? acceptLanguageMatcher(acceptLanguage, locales, '')
         : '';
       if (matchedLocale) {
+        findedLocale = matchedLocale;
         current.percent = 1;
         current.locale = matchedLocale;
       }
