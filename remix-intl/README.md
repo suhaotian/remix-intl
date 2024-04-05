@@ -398,10 +398,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         <ScrollRestoration />
-        <Scripts />
         {/* --- 4.ADD THIS --- */}
         <IntlScript />
         {/* --- 4.ADD THIS END --- */}
+        <Scripts />
       </body>
     </html>
   );
