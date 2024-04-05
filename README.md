@@ -462,9 +462,9 @@ const langs = [
 export default function LanguageSwitcher() {
   return (
     <div>
-      {langs.map((item) => {
+      {langs.map((item, idx) => {
         return (
-          <SwitchLocaleLink key={item.locale} locale={item.code}>
+          <SwitchLocaleLink key={item.locale} locale={item.code} query={{ idx }}>
             {item.text}
           </SwitchLocaleLink>
         );

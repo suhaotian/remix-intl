@@ -4,8 +4,6 @@
 
 The best internationalization(i18n) library for your Remix apps.
 
-> Require at least Remix@2.8
-
 **Features:**
 
 - 🥳 Powerful and fully under your control
@@ -86,6 +84,8 @@ export async function action({ request }: ActionFunctionArgs) {
     - [`paramKey`](#paramkey)
     - [Switch different languages](#switch-different-languages)
     - [`Link`, `NavLink` and `useNavigate`](#link-navlink-and-usenavigate)
+    - [`useT` and `useLocale`](#uset-and-uselocale)
+    - [`getT` and `getLocale` in `meta` / `loader` / `action`](#gett-and-getlocale-in-meta--loader--action)
   - [API](#api)
     - [remix-intl API](#remix-intl-api)
     - [i18next API](#i18next-api)
@@ -166,12 +166,7 @@ export default i18next;
 import { createCookie } from '@remix-run/node';
 import { intlConfig } from './i18n';
 
-export const i18nCookie = createCookie(intlConfig.cookieKey, {
-  path: '/',
-  sameSite: 'lax',
-  httpOnly: true,
-  secrets: [],
-});
+export const i18nCookie = createCookie(intlConfig.cookieKey);
 ```
 
 #### Create i18n navigation components file
@@ -398,10 +393,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         <ScrollRestoration />
+        <Scripts />
         {/* --- 4.ADD THIS --- */}
         <IntlScript />
         {/* --- 4.ADD THIS END --- */}
-        <Scripts />
       </body>
     </html>
   );
@@ -532,6 +527,64 @@ export default function LinkNavigate() {
       </button>
     </div>
   );
+}
+```
+
+### `useT` and `useLocale`
+
+In React components, we can use `useLocale` to get current locale code,
+
+and `useT` can get `t` function to translate:
+
+```tsx
+import { useLocale, useT } from 'remix-intl';
+
+export default function RemixIntlExample() {
+  const locale = useLocale();
+  const { t, locale: sameWithLocale } = useT();
+  // or const { t,  locale: sameWithLocale } = useT(namespace);
+
+  return (
+    <div>
+      <h1>{t('i18n_key')}</h1>
+      <p>current locale: {locale}</p>
+    </div>
+  );
+}
+```
+
+### `getT` and `getLocale` in `meta` / `loader` / `action`
+
+Out of react components, like inside `meta`, `loader` or `action`, we can use `getT` to get `t` function and translate:
+
+```tsx
+import { getLocale, getT } from 'remix-intl/server';
+
+// in `meta`
+export const meta: MetaFunction = ({ location }) => {
+  const { t, locale } = getT(location); // `getT` can receive location object or string pathname?search
+  // or const { t, locale } = getT(location, namespace);
+  const sameWithLocale = getLocale(location); // `getLocale` same paramater with `getT`
+
+  return [{ title: t('i18n_key') }];
+};
+
+// in `loader`
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const { t } = getT(request.url);
+  const locale = getLocale(request.url);
+  return json({ title: t('i18n_key'), locale });
+};
+
+// in `action`
+export async function action({ request }: ActionFunctionArgs) {
+  const body = await request.formData();
+  const { t } = getT(request.url);
+  if (!body.get('title')) {
+    return json({ errors: { title: t('required') } });
+  }
+  return redirect(request.url);
 }
 ```
 

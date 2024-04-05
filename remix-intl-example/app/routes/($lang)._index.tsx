@@ -65,7 +65,9 @@ export default function Index() {
         {locales.map((item) => {
           return (
             <li key={item}>
-              <SwitchLocaleLink locale={item}>{item}</SwitchLocaleLink>
+              <SwitchLocaleLink locale={item} query={{ a: '1' }}>
+                {item}
+              </SwitchLocaleLink>
             </li>
           );
         })}

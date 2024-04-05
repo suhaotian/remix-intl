@@ -5,12 +5,17 @@ export function acceptLanguageMatcher(
 ) {
   const supportLocales = transformAcceptLanguageToSortedArray(acceptLanguage);
   if (supportLocales.length > 0) {
-    const locale = locales.find((locale) => {
+    const locale = '';
+    supportLocales.find((locale) => {
       const l = locale.toLowerCase();
-      return supportLocales.find((item) => {
+      const findLocale = locales.find((item) => {
         const i = item.toLowerCase();
         return i === l;
       });
+      if (findLocale) {
+        locale = findLocale;
+      }
+      return findLocale;
     });
     if (locale) return locale;
   }

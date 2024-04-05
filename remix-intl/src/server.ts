@@ -123,7 +123,7 @@ export async function parseLocale(
     if (cookieLocale && cookieLocale !== null) {
       current.percent = 1;
       current.locale = cookieLocale;
-    } else {
+    } else if (locale) {
       // find similiarity
       locales.forEach((item: string) => {
         const percent = stringSimilarity(locale, item);

@@ -16,35 +16,58 @@ import { getIntlConfig } from 'remix-intl/i18n';
 export function createSharedPathnamesNavigation() {
   const { mode, paramKey, getMessages, defaultNS, i18next } = getIntlConfig();
 
-  function getPath(toPathname: string, locale: string, replaceLocale = false) {
+  function getPath(
+    toPathname: string,
+    locale: string,
+    replaceLocale = false,
+    query?: Record<string, any>
+  ) {
     const isSearchParamMode = mode === 'search';
     if (!isSearchParamMode) {
       if (replaceLocale) {
         const pathArr = toPathname.split('/');
         pathArr[1] = locale;
-        return pathArr.join('/');
+        toPathname = pathArr.join('/');
       } else {
         toPathname = toPathname.startsWith('/') ? '/' + locale + toPathname : toPathname;
       }
+
+      if (query) {
+        const arr = toPathname.split('?');
+        const urlObj = new URL('http://localhost?' + (arr[1] || ''));
+        Object.keys(query).forEach((key) => {
+          urlObj.searchParams.set(key, query[key]);
+        });
+
+        return arr[0] + '?' + urlObj.searchParams.toString();
+      }
+      return toPathname;
     } else {
       if (toPathname.startsWith('/')) {
         const urlObj = new URL('http://localhost' + toPathname);
         urlObj.searchParams.set(paramKey, locale);
+        if (query) {
+          Object.keys(query).forEach((key) => {
+            urlObj.searchParams.set(key, query[key]);
+          });
+        }
         toPathname = urlObj.pathname + '?' + urlObj.searchParams.toString() + urlObj.hash;
       }
     }
+
     return toPathname;
   }
 
   function SwitchLocaleLink({
     locale,
     onClick,
+    query,
     ...props
-  }: Omit<LinkProps, 'to'> & { locale: string }) {
+  }: Omit<LinkProps, 'to'> & { locale: string; query?: Record<string, any> }) {
     const location = useLocation();
     const navigate = useNavigate();
     const toPathname = location.pathname + location.search + location.hash;
-    const to = getPath(toPathname, locale, true);
+    const to = getPath(toPathname, locale, true, query);
     async function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
       if (!props.reloadDocument) {
         e.preventDefault();
