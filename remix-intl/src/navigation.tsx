@@ -13,18 +13,14 @@ import { useLocale } from 'remix-intl';
 import { getIntlConfig } from 'remix-intl/i18n';
 // @ts-ignore
 
-export function createSharedPathnamesNavigation({
-  Link: _Link,
-  NavLink: _NavLink,
-  useNavigate: _useNavigate,
-}?: {
+export function createSharedPathnamesNavigation(props?: {
   Link?: typeof RemixLink;
   NavLink?: typeof RemixNavLink;
   useNavigate?: typeof useRemixNavigate;
 }) {
-  const Link = _Link || RemixLink;
-  const NavLink = _NavLink || RemixNavLink;
-  const useNavigate = _useNavigate || useRemixNavigate;
+  const Link = props?.Link || RemixLink;
+  const NavLink = props?.NavLink || RemixNavLink;
+  const useNavigate = props?.useNavigate || useRemixNavigate;
 
   const { mode, paramKey, getMessages, defaultNS, i18next } = getIntlConfig();
 
