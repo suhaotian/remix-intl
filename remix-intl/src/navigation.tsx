@@ -1,7 +1,7 @@
 import {
-  Link,
-  NavLink,
-  useNavigate,
+  Link as RemixLink,
+  NavLink as RemixNavLink,
+  useNavigate as useRemixNavigate,
   LinkProps,
   NavLinkProps,
   NavigateFunction,
@@ -13,7 +13,19 @@ import { useLocale } from 'remix-intl';
 import { getIntlConfig } from 'remix-intl/i18n';
 // @ts-ignore
 
-export function createSharedPathnamesNavigation() {
+export function createSharedPathnamesNavigation({
+  Link: _Link,
+  NavLink: _NavLink,
+  useNavigate: _useNavigate,
+}?: {
+  Link?: typeof RemixLink;
+  NavLink?: typeof RemixNavLink;
+  useNavigate?: typeof useRemixNavigate;
+}) {
+  const Link = _Link || RemixLink;
+  const NavLink = _NavLink || RemixNavLink;
+  const useNavigate = _useNavigate || useRemixNavigate;
+
   const { mode, paramKey, getMessages, defaultNS, i18next } = getIntlConfig();
 
   function getPath(
