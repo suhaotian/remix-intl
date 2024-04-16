@@ -7,7 +7,7 @@ import {
   NavigateFunction,
   useLocation,
 } from '@remix-run/react';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 // @ts-ignore
 import { useLocale } from 'remix-intl';
 import { getIntlConfig } from 'remix-intl/i18n';
@@ -74,30 +74,42 @@ export function createSharedPathnamesNavigation(props?: {
   }: Omit<LinkProps, 'to'> & { locale: string; query?: Record<string, any> }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const toPathname = location.pathname + location.search + location.hash;
-    const to = getPath(toPathname, locale, true, query);
-    async function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-      if (!props.reloadDocument) {
-        e.preventDefault();
-        const { messages } = await getMessages(locale);
-        i18next.addResourceBundle(locale, defaultNS, messages);
-        navigate(to, props);
-      }
-      onClick && onClick(e);
-    }
+    const to = useMemo(() => {
+      const toPathname = location.pathname + location.search + location.hash;
+      return getPath(toPathname, locale, true, query);
+    }, [location, locale]);
+    const handleClick = useCallback(
+      async function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+        if (!props.reloadDocument) {
+          e.preventDefault();
+          const { messages } = await getMessages(locale);
+          i18next.addResourceBundle(locale, defaultNS, messages);
+          navigate(to, props);
+        }
+        onClick && onClick(e);
+      },
+      [locale, props.reloadDocument, onClick]
+    );
+
     return <Link {...props} to={to} onClick={handleClick} />;
   }
 
   function LinkIntl({ to, ...props }: LinkProps) {
     const locale = useLocale();
-    const toPathname = typeof to === 'string' ? to : to.toString();
-    return <Link {...props} to={getPath(toPathname, locale)} />;
+    const _to = useMemo(() => {
+      const toPathname = typeof to === 'string' ? to : to.toString();
+      return getPath(toPathname, locale);
+    }, [locale, to]);
+    return <Link {...props} to={_to} />;
   }
 
   function NavLinkIntl({ to, ...props }: NavLinkProps) {
     const locale = useLocale();
-    const toPathname = typeof to === 'string' ? to : to.toString();
-    return <NavLink {...props} to={getPath(toPathname, locale)} />;
+    const _to = useMemo(() => {
+      const toPathname = typeof to === 'string' ? to : to.toString();
+      return getPath(toPathname, locale);
+    }, [locale, to]);
+    return <NavLink {...props} to={_to} />;
   }
 
   function useNavigateIntl() {
