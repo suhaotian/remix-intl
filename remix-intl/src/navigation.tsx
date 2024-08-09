@@ -70,14 +70,15 @@ export function createSharedPathnamesNavigation(props?: {
     locale,
     onClick,
     query,
+    to: _to,
     ...props
-  }: Omit<LinkProps, 'to'> & { locale: string; query?: Record<string, any> }) {
+  }: Omit<LinkProps, 'to'> & { locale: string; query?: Record<string, any>; to?: string }) {
     const location = useLocation();
     const navigate = useNavigate();
     const to = useMemo(() => {
-      const toPathname = location.pathname + location.search + location.hash;
+      const toPathname = (_to || location.pathname) + location.search + location.hash;
       return getPath(toPathname, locale, true, query);
-    }, [location, locale]);
+    }, [location, locale, query]);
     const handleClick = useCallback(
       async function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         if (!props.reloadDocument) {
