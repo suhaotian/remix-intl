@@ -6,7 +6,14 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 installGlobals();
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), remix()],
+  plugins: [
+    tsconfigPaths(),
+    remix({
+      future: {
+        unstable_lazyRouteDiscovery: true,
+      },
+    }),
+  ],
   server: {
     port: +(process.env.PORT || '3000'),
   },

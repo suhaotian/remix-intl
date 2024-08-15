@@ -61,7 +61,7 @@
     "i18next": "^23",
     "react": "^18",
     "react-dom": "^18",
-    "xior": "^0.3.5",
+    "xior": "^0.5.5",
     "bunchee": "^5.1.2",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -77,8 +77,8 @@
     "@babel/preset-env": "^7.24.0",
     "babel-jest": "^29.7.0",
     "vite": "^5.1.0",
-    "@remix-run/react": "^2.8.1",
-    "@remix-run/node": "^2.8.1"
+    "@remix-run/react": "^2.11.1",
+    "@remix-run/node": "^2.11.1"
   },
   "files": [
     "*.d.ts",

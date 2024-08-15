@@ -1,11 +1,11 @@
-import { xior } from 'xior';
+import { Xior } from 'xior';
 import errorRetryPlugin from 'xior/plugins/error-retry';
 import errorCachePlugin from 'xior/plugins/error-cache';
 import dedupeRequestPlugin from 'xior/plugins/dedupe';
 import throttlePlugin from 'xior/plugins/throttle';
 import { isClient } from 'remix-intl/utils';
 
-export const http = xior.create({
+export const http = Xior.create({
   baseURL: !isClient ? 'http://localhost:' + process.env.PORT : '',
   timeout: 1000 * 60 * 2,
 });
