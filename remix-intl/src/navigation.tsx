@@ -11,7 +11,6 @@ import React, { useCallback, useMemo } from 'react';
 // @ts-ignore
 import { useLocale } from 'remix-intl';
 import { getIntlConfig } from 'remix-intl/i18n';
-// @ts-ignore
 
 export function createSharedPathnamesNavigation(props?: {
   Link?: typeof RemixLink;
@@ -22,7 +21,7 @@ export function createSharedPathnamesNavigation(props?: {
   const NavLink = props?.NavLink || RemixNavLink;
   const useNavigate = props?.useNavigate || useRemixNavigate;
 
-  const { mode, paramKey, getMessages, defaultNS, i18next } = getIntlConfig();
+  const { mode, paramKey } = getIntlConfig();
 
   function getPath(
     toPathname: string,
@@ -83,7 +82,9 @@ export function createSharedPathnamesNavigation(props?: {
       async function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
         if (!props.reloadDocument) {
           e.preventDefault();
+          const { clientKey, defaultNS, i18next, getMessages } = getIntlConfig();
           const { messages } = await getMessages(locale);
+          (window as any)[clientKey] = { messages, locale };
           i18next.addResourceBundle(locale, defaultNS, messages);
           navigate(to, props);
         }
