@@ -70,8 +70,18 @@ export function createSharedPathnamesNavigation(props?: {
     onClick,
     query,
     to: _to,
+    onError,
+    onLoadStart,
+    onLoadEnd,
     ...props
-  }: Omit<LinkProps, 'to'> & { locale: string; query?: Record<string, any>; to?: string }) {
+  }: Omit<LinkProps, 'to'> & {
+    locale: string;
+    query?: Record<string, any>;
+    to?: string;
+    onError?: (error: Error) => void;
+    onLoadStart?: () => void;
+    onLoadEnd?: () => void;
+  }) {
     const location = useLocation();
     const navigate = useNavigate();
     const to = useMemo(() => {
@@ -83,9 +93,16 @@ export function createSharedPathnamesNavigation(props?: {
         if (!props.reloadDocument) {
           e.preventDefault();
           const { clientKey, defaultNS, i18next, getMessages } = getIntlConfig();
-          const { messages } = await getMessages(locale);
-          (window as any)[clientKey] = { messages, locale };
-          i18next.addResourceBundle(locale, defaultNS, messages);
+          try {
+            onLoadStart && onLoadStart();
+            const { messages } = await getMessages(locale);
+            (window as any)[clientKey] = { messages, locale };
+            i18next.addResourceBundle(locale, defaultNS, messages);
+          } catch (e) {
+            onError && onError(e as Error);
+          } finally {
+            onLoadEnd && onLoadEnd();
+          }
           navigate(to, props);
         }
         onClick && onClick(e);
