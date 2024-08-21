@@ -1,5 +1,9 @@
 # CHANGELOG 📝
 
+## v0.0.14 2024-08-21
+
+- Feat `SwitchLocaleLink` support `onLoadStart` / `onLoadEnd` / `onError` props
+
 ## v0.0.13 2024-08-16
 
 - Feat `SwitchLocaleLink` support `to` props
