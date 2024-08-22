@@ -71,16 +71,16 @@ export function createSharedPathnamesNavigation(props?: {
     query,
     to: _to,
     onError,
-    onLoadStart,
-    onLoadEnd,
+    onStartLoad,
+    onFinishLoad,
     ...props
   }: Omit<LinkProps, 'to'> & {
     locale: string;
     query?: Record<string, any>;
     to?: string;
-    onError?: (error: Error) => void;
-    onLoadStart?: () => void;
-    onLoadEnd?: () => void;
+    onError?: (error: Error, locale: string) => void;
+    onStartLoad?: (locale: string) => void;
+    onFinishLoad?: (locale: string) => void;
   }) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -94,14 +94,14 @@ export function createSharedPathnamesNavigation(props?: {
           e.preventDefault();
           const { clientKey, defaultNS, i18next, getMessages } = getIntlConfig();
           try {
-            onLoadStart && onLoadStart();
+            onStartLoad && onStartLoad(locale);
             const { messages } = await getMessages(locale);
             (window as any)[clientKey] = { messages, locale };
             i18next.addResourceBundle(locale, defaultNS, messages);
           } catch (e) {
-            onError && onError(e as Error);
+            onError && onError(e as Error, locale);
           } finally {
-            onLoadEnd && onLoadEnd();
+            onFinishLoad && onFinishLoad(locale);
           }
           navigate(to, props);
         }

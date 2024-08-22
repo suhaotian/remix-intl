@@ -1,5 +1,9 @@
 # CHANGELOG 📝
 
+## v0.0.15 2024-08-22
+
+- Feat `SwitchLocaleLink` change props(due to conflict to HTML DOM props) `onLoadStart` to `onStartLoad`, `onLoadEnd` to `onFinishLoad`, and add `locale` paramater to `onStartLoad` / `onFinishLoad` / `onError`
+
 ## v0.0.14 2024-08-21
 
 - Feat `SwitchLocaleLink` support `onLoadStart` / `onLoadEnd` / `onError` props
