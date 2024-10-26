@@ -114,7 +114,7 @@ export async function parseLocale(
     };
 
     // detect cookie language
-    const cookieHeader = request.headers.get('Cookie');
+    const cookieHeader = request.headers.get('Cookie') || '';
     let cookieLocale = await i18nCookie.parse(cookieHeader);
     if (cookieLocale && cookieLocale !== null) {
       const locale = cookieLocale?.toLowerCase?.();
