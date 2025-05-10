@@ -177,7 +177,10 @@ export const i18nCookie = createCookie(intlConfig.cookieKey);
 
 ```tsx
 // app/navigation.tsx
+import { setupIntlConfig } from './i18n';
 import { createSharedPathnamesNavigation } from 'remix-intl/navigation';
+
+setupIntlConfig();
 
 const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNavigation();
 
@@ -366,7 +369,9 @@ import {
 } from '@remix-run/react';
 import { LoaderFunctionArgs } from '@remix-run/node';
 
+/* --- 1.1 Add THIS --- */
 setupIntlConfig();
+/* --- 1.1 Add THIS --- */
 
 export async function loader({ request }: LoaderFunctionArgs) {
   /* --- 2.ADD THIS --- */
