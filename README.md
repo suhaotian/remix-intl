@@ -151,7 +151,10 @@ export const intlConfig: IntlConfig = {
   i18next,
 };
 
-setIntlConfig(intlConfig);
+export function setupIntlConfig() {
+  setIntlConfig(intlConfig);
+}
+setupIntlConfig();
 
 export default i18next;
 ```
@@ -174,7 +177,10 @@ export const i18nCookie = createCookie(intlConfig.cookieKey);
 
 ```tsx
 // app/navigation.tsx
+import { setupIntlConfig } from './i18n';
 import { createSharedPathnamesNavigation } from 'remix-intl/navigation';
+
+setupIntlConfig();
 
 const { Link, NavLink, useNavigate, SwitchLocaleLink } = createSharedPathnamesNavigation();
 
@@ -345,7 +351,7 @@ startTransition(() => {
 // app/root.tsx
 
 /* --- 1.IMPORT THIS --- */
-import './i18n';
+import { setupIntlConfig } from './i18n';
 import { parseLocale } from 'remix-intl/server';
 import { IntlScript } from 'remix-intl';
 import { i18nCookie } from './i18n.server';
@@ -362,6 +368,8 @@ import {
   redirect,
 } from '@remix-run/react';
 import { LoaderFunctionArgs } from '@remix-run/node';
+
+setupIntlConfig();
 
 export async function loader({ request }: LoaderFunctionArgs) {
   /* --- 2.ADD THIS --- */

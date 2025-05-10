@@ -6,14 +6,14 @@ import {
   LoaderFunctionArgs,
 } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { getIntlConfig } from 'remix-intl/i18n';
+import { intlConfig } from '../i18n';
 import { useT } from 'remix-intl';
 import { getT } from 'remix-intl/server';
 import { Link, SwitchLocaleLink, useNavigate } from '~/navigation';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { locales } = await getIntlConfig().getLocales();
-  return json({ locales });
+  const { locales } = await intlConfig.getLocales();
+  return { locales };
 };
 
 export const meta: MetaFunction = ({ location }) => {
@@ -65,7 +65,12 @@ export default function Index() {
         {locales.map((item) => {
           return (
             <li key={item}>
-              <SwitchLocaleLink locale={item} query={{ a: '1' }}>
+              <SwitchLocaleLink
+                locale={item}
+                query={{ a: '1' }}
+                onError={(e) => {
+                  console.error(e);
+                }}>
                 {item}
               </SwitchLocaleLink>
             </li>

@@ -1,6 +1,5 @@
 import { createInstance } from 'i18next';
-// @ts-ignore
-import type { GetLocalesRes, GetMessagesRes, IntlConfig } from 'remix-intl/types';
+import type { GetLocalesRes, GetMessagesRes, IntlConfig } from './types';
 
 const defaultNS = 'remix_intl';
 

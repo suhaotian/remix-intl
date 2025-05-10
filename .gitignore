@@ -7,5 +7,7 @@ coverage
 *.cjs
 *.mjs
 *.esm.js
+*.js
+*.mts
 !npm-publish-fields.mjs
 !purge-pkg-for-publish.mjs

@@ -31,4 +31,10 @@ export const intlConfig: IntlConfig = {
   i18next,
 };
 
-setIntlConfig(intlConfig);
+export function setupIntlConfig() {
+  setIntlConfig(intlConfig);
+}
+
+setupIntlConfig();
+
+export default i18next;

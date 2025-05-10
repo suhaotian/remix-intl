@@ -1,10 +1,8 @@
 import { useLocation, useSearchParams } from '@remix-run/react';
 import type { TOptions, i18n } from 'i18next';
 import React from 'react';
-// @ts-ignore
-import { getIntlConfig } from 'remix-intl/i18n';
-// @ts-ignore
-import { isClient } from 'remix-intl/utils';
+import { getIntlConfig } from './i18n';
+import { isClient } from './utils';
 
 export function useLocale() {
   const { mode, paramKey, defaultLocale } = getIntlConfig();

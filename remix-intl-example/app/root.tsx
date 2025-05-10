@@ -1,4 +1,4 @@
-import './i18n';
+import { setupIntlConfig } from './i18n';
 import { parseLocale } from 'remix-intl/server';
 import { IntlScript } from 'remix-intl';
 import { i18nCookie } from './i18n.server';
@@ -16,9 +16,11 @@ import {
 
 import { LoaderFunctionArgs } from '@remix-run/node';
 
+setupIntlConfig();
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const res = await parseLocale(request, i18nCookie);
-  if (res.isRedirect) {
+  if (res.isRedirect && res.locale) {
     return redirect(res.redirectURL);
   }
   return json(res, {

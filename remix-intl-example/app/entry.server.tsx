@@ -4,7 +4,6 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import './i18n';
 import { PassThrough } from 'node:stream';
 
 import type { AppLoadContext, EntryContext } from '@remix-run/node';

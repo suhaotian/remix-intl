@@ -1,10 +1,8 @@
 import type { Cookie } from '@remix-run/node';
 import type { Location } from '@remix-run/react';
 import type { TOptions, i18n } from 'i18next';
-// @ts-ignore
-import { getIntlConfig } from 'remix-intl/i18n';
-// @ts-ignore
-import { acceptLanguageMatcher, stringSimilarity } from 'remix-intl/utils';
+import { getIntlConfig } from './i18n';
+import { acceptLanguageMatcher, stringSimilarity } from './utils';
 
 export function getLocale(
   locationOrHref: (Partial<Location> & Pick<Location, 'pathname' | 'search'>) | string

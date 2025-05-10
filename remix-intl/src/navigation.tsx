@@ -8,9 +8,8 @@ import {
   useLocation,
 } from '@remix-run/react';
 import React, { useCallback, useMemo } from 'react';
-// @ts-ignore
-import { useLocale } from 'remix-intl';
-import { getIntlConfig } from 'remix-intl/i18n';
+import { useLocale } from './';
+import { getIntlConfig } from './i18n';
 
 export function createSharedPathnamesNavigation(props?: {
   Link?: typeof RemixLink;

@@ -1,7 +1,7 @@
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 import { useT } from 'remix-intl';
 import { parseLocale, getT } from 'remix-intl/server';
-import { getIntlConfig } from 'remix-intl/i18n';
+import { intlConfig } from '../i18n';
 import { i18nCookie } from '~/i18n.server';
 
 import { SwitchLocaleLink } from '~/navigation';
@@ -11,13 +11,13 @@ const NAMESPACE = 'docs';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { locale, locales } = await parseLocale(request, i18nCookie);
-  const { messages } = await getIntlConfig().getMessages(locale, NAMESPACE);
-  return json({ messages, locale, NAMESPACE, locales });
+  const { messages } = await intlConfig.getMessages(locale, NAMESPACE);
+  return { messages, locale, NAMESPACE, locales };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) return [];
-  getIntlConfig().i18next.addResourceBundle(data.locale, NAMESPACE, data.messages);
+  intlConfig.i18next.addResourceBundle(data.locale, NAMESPACE, data.messages);
   const { t } = getT(data.locale, NAMESPACE);
 
   return [{ title: t('doc') }, { name: 'description', content: 'Welcome to Remix!' }];

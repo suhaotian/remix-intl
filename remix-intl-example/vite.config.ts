@@ -9,9 +9,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     remix({
-      future: {
-        unstable_lazyRouteDiscovery: true,
-      },
+      future: {},
     }),
   ],
   server: {
