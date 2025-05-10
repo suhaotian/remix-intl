@@ -1,5 +1,10 @@
 # CHANGELOG 📝
 
+## v0.0.16 2025-05-10
+
+- Build: Replace bunchee with tsup
+- Doc: Update README about setup
+
 ## v0.0.15 2024-08-22
 
 - Feat `SwitchLocaleLink` change props(due to conflict to HTML DOM props) `onLoadStart` to `onStartLoad`, `onLoadEnd` to `onFinishLoad`, and add `locale` paramater to `onStartLoad` / `onFinishLoad` / `onError`

@@ -108,8 +108,10 @@
   "files": [
     "*.d.ts",
     "*.js",
+    "*.mts",
     "*.mjs",
     "*.esm.js",
+    "dist",
     "README.md"
   ],
   "keywords": [
