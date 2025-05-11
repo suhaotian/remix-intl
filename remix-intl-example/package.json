@@ -17,7 +17,8 @@
     "isbot": "^4.1.0",
     "react": "^19",
     "react-dom": "^19",
-    "vite-aliases": "^0.11.8"
+    "vite-aliases": "^0.11.8",
+    "i18next": "^23"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.16.6",
@@ -31,7 +32,6 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "i18next": "^23",
     "remix-intl": "file:../remix-intl",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
